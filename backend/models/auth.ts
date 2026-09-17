@@ -1,7 +1,7 @@
 import mongoose,{Schema,model} from "mongoose";
 
 const userScema=new Schema({
-    userName: {
+    username: {
     type: String,
     required: true, // Validation: item must be present
     trim: true      // Sanitization: cuts off accidental leading/trailing spaces
