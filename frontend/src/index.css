@@ -1,22 +1,71 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 :root {
-	font-family: "DM Sans", sans-serif;
+	font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 	color: #f3f4f6;
-	background: #111315;
+	background-color: #0b0e14;
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 * {
 	box-sizing: border-box;
 }
+
 body {
 	margin: 0;
 	min-width: 320px;
+	background-color: #0b0e14;
+	color: #e2e8f0;
+	overflow-x: hidden;
 }
-button,
-input {
-	font: inherit;
+
+/* Custom handwriting font for bottom right brand tagline */
+.font-handwriting {
+	font-family: 'Caveat', cursive;
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: #0b0e14;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #1e2533;
+	border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #2d3748;
+}
+
+/* Card glass / subtle dark border styling */
+.dashboard-card {
+	background-color: #12161f;
+	border: 1px solid #1c2331;
+	border-radius: 0.875rem;
+	transition: all 0.2s ease-in-out;
+}
+
+.dashboard-card:hover {
+	border-color: #273145;
+}
+
+/* Custom interactive pill button */
+.badge-pill {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.15rem 0.65rem;
+	border-radius: 9999px;
+	font-size: 0.72rem;
+	font-weight: 500;
+	line-height: 1.25;
 }
