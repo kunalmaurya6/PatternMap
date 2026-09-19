@@ -20,7 +20,6 @@ const authRoute = express.Router();
 
 authRoute.post('/signup', async (req, res) => {
     try {
-        console.log(req.body);
         const value=req.body;
         // const { error, value } = userValidationSchema.validate(req.body);
         // if (error) {
@@ -31,7 +30,7 @@ authRoute.post('/signup', async (req, res) => {
         const { password } = value;
         const email = value.email.trim().toLowerCase();
         const username = value.username.trim();
-        const existingUser = await User.findOne(email);
+        const existingUser = await User.findOne({email});
         if (existingUser) {
             return res.status(409).json({ message: "Email or username already exists" });
         }
@@ -55,6 +54,8 @@ authRoute.post('/signup', async (req, res) => {
 
 authRoute.post('/login', async (req, res) => {
     try {
+        console.log("login");
+        
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -119,4 +120,4 @@ authRoute.post('/logout', (req, res) => {
     res.status(200).json({ success: true, message: "Logged out successfully" });
 });
 
-export default authRoute
+export default authRoute;
