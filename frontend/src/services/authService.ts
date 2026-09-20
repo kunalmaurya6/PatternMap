@@ -18,24 +18,28 @@ export interface AuthResponse {
 }
 
 export const login = async (data: UserAuthCredentials) => {
-  return await api.post<AuthResponse>('/auth/login', data);
+  return await api.post<AuthResponse>('/login', data);
 };
 
 export const signup = async (data: UserAuthCredentials) => {
-  return await api.post<AuthResponse>('/auth/signup', data);
+  return await api.post<AuthResponse>('/signup', data);
 };
 
 // Backwards compatibility alias for existing code
 export const sinup = signup;
 
 export const resetPassword = async (email: string) => {
-  return await api.post('/auth/reset-password', { email });
+  return await api.post('/reset-password', { email });
 };
 
 export const changePassword = async (data: UserAuthCredentials) => {
-  return await api.post('/auth/change-password', data);
+  return await api.post('/change-password', data);
 };
 
-export const ssoLogin = async (provider: string) => {
-  return await api.get(`/auth/sso/${provider}`);
+export const googleLogin = async () => {
+  window.location.href = `${import.meta.env.VITE_API_URL}/google-login`;
+};
+
+export const logout=async()=>{
+  return await api.post('/logout')
 };

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Bell, Menu, User, LogOut, CheckCircle2 } from 'lucide-react';
+import { logout } from '@/services/authService';
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -136,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, onSearch }) => {
           {profileOpen && (
             <div className="absolute right-0 mt-2 w-56 bg-[#121620] border border-[#1e2533] rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95">
               <div className="px-3 py-2.5 border-b border-[#1c2331]">
-                <p className="text-sm font-semibold text-white">Akash Sharma</p>
+                <p className="text-sm font-semibold text-white">Kunal Maurya</p>
                 <p className="text-xs text-slate-400 truncate">akash.sharma@example.com</p>
               </div>
               <div className="py-1">
@@ -151,14 +152,19 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, onSearch }) => {
                   <span>Profile & Target</span>
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     navigate('/auth');
                     setProfileOpen(false);
+                    await logout()
+                    .then(data=>{
+                      console.log(data);
+                      
+                    });
                   }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-950/20 rounded-xl transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>Sign Out / Switch Account</span>
+                  <span>Sign Out</span>
                 </button>
               </div>
             </div>

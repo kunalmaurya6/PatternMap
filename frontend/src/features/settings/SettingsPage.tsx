@@ -4,7 +4,7 @@ import { useToast } from '@/context/ToastContext';
 
 export const SettingsPage: React.FC = () => {
   const { success } = useToast();
-  const [name, setName] = useState('Akash Sharma');
+  const [name, setName] = useState('Kunal Maurya');
   const [email, setEmail] = useState('akash.sharma@example.com');
   const [dailyTarget, setDailyTarget] = useState('2');
   const [emailDigest, setEmailDigest] = useState(true);

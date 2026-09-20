@@ -3,14 +3,25 @@ import routes from './routes/index.js';
 import mongoose from 'mongoose';
 import 'dotenv/config';
 import cors from 'cors';
+import cookieParser from "cookie-parser";
+import { authMiddleware } from './routes/authentication/index.js';
+import authentication from "./routes/authentication/index.js"
 
 const app=express();
 
 app.use(express.json());
 
-app.use(cors())
+app.use(cookieParser());
 
-app.use("/api",routes);
+app.use(cors(
+    {
+    origin: "http://localhost:5173",
+    credentials: true
+    }
+))
+
+app.use("/api",authentication,authMiddleware);
+
 
 const PORT=process.env.PORT;
 

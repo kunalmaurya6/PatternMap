@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { login, sinup } from '@/services/authService';
+import { googleLogin, login, sinup } from '@/services/authService';
 import { useToast } from '@/context/ToastContext';
 
 type AuthMode = 'login' | 'signup';
@@ -73,7 +73,7 @@ export const AuthPage = () => {
     }));
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (isResettingPassword) {
@@ -149,6 +149,15 @@ export const AuthPage = () => {
     }
   };
 
+  const handleGoogelLogin=async (event: React.MouseEvent<HTMLButtonElement>)=>{
+    console.log("google login");
+    
+    event.preventDefault();
+    console.log("google1");
+    
+    await googleLogin();
+  }
+
   const openForgotPassword = () => {
     setIsResettingPassword(true);
     setResetSent(false);
@@ -200,7 +209,7 @@ export const AuthPage = () => {
               <AuthTabs mode={mode} onChange={switchMode} />
             )}
 
-            <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
+            <form className="mt-6 space-y-5" onSubmit={handleLogin}>
               {!isResettingPassword && !isLogin && (
                 <Field
                   id="username"
@@ -321,6 +330,7 @@ export const AuthPage = () => {
                 <button
                   type="button"
                   className="mt-6 flex h-10 w-full items-center justify-center gap-3 rounded-[9px] border border-white/[0.1] bg-[#222427] text-sm text-[#d7d9dc] transition hover:bg-[#2a2c30]"
+                  onClick={handleGoogelLogin}
                 >
                   <GoogleIcon />
                   Continue with Google

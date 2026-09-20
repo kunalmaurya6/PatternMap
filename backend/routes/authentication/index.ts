@@ -1,12 +1,156 @@
 import { User } from "../../models/auth.js";
 import secretToken from "./SecretToken.js";
 import bcrypt from "bcrypt";
-// import userValidationSchema from "../../models/validation/userValidation.js";
 import express from 'express';
-import jwt from 'jsonwebtoken'
-// import requireAuth, { isAdminUser } from "./authMiddleware.js";
+import jwt from 'jsonwebtoken';
+import type { Request, Response, NextFunction } from "express";
+import { OAuth2Client } from "google-auth-library";
+import crypto from "crypto";
 
 const authRoute = express.Router();
+
+
+export const authMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.cookies.token;
+  
+  console.log("token",token);
+  
+
+  if (!token) {
+    return res.status(401).json({
+      message: "Authentication required",
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.TOKEN_KEY!
+    );
+
+    req.user = decoded;
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      message: "Invalid or expired token",
+    });
+  }
+};
+
+
+const { APP_URL, GOOGLE_ID, GOOGLE_SECRET, STATE_SECRET } = process.env;
+
+const REDIRECT_URI = `${APP_URL}/api/google/callback`;
+
+const googleClient = new OAuth2Client({
+  clientId: GOOGLE_ID!,
+  clientSecret: GOOGLE_SECRET!,
+  redirectUri: REDIRECT_URI!,
+});
+
+authRoute.get("/google-login", (_, res) => {
+  console.log("google-login");
+  
+  const params = new URLSearchParams({
+    client_id: GOOGLE_ID!,
+    redirect_uri: REDIRECT_URI!,
+    response_type: "code",
+    scope: "openid email profile",
+    prompt: "select_account",
+    state: makeState(),
+  });
+
+  const GOOGLE_URL = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+
+  return res.redirect(GOOGLE_URL);
+});
+
+function makeState() {
+  const payload = {
+    nonce: crypto.randomBytes(16).toString("hex"),
+    iat: Date.now(),
+  };
+
+  const encoded = Buffer.from(JSON.stringify(payload)).toString("base64url");
+
+  const sig = crypto
+    .createHmac("sha256", STATE_SECRET!)
+    .update(encoded)
+    .digest("base64url");
+
+  return `${encoded}.${sig}`;
+}
+
+authRoute.get("/google/callback", async (req, res, next) => {
+  const { code, state } = req.query;
+
+  if (!code || !state) return next(new Error("Missing Google credential"));
+  
+
+  const isValid = validateState(state);
+
+  if (!isValid) return next(new Error("Invalid state"));
+
+  try {
+    const { tokens } = await googleClient.getToken(String(code));
+
+    if (!tokens.id_token) throw new Error("Error with Google Login`");
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: GOOGLE_ID!,
+    });
+
+    const payload = ticket.getPayload();
+
+    const { email, name, picture } = payload!;
+
+    console.log("picture",picture);
+    
+
+    let user = await User.findOne({email:email!});
+    if (!user) {
+      user = await User.create({ email:email!, password: "google-login", username:name! });
+    }
+
+    const token = secretToken(user._id);
+    res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "lax",
+    });
+    
+    return res.redirect("http://localhost:5173");
+  } catch (error) {
+    return next(error);
+  }
+});
+
+function validateState(state) {
+  const [encoded, sig] = state.split(".");
+
+  const expectedSig = crypto
+    .createHmac("sha256", STATE_SECRET!)
+    .update(encoded)
+    .digest("base64url");
+
+  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig))) {
+    return false;
+  }
+
+  const payload = JSON.parse(Buffer.from(encoded, "base64url").toString());
+
+  const FIVE_MINUTES = 5 * 60 * 1000;
+  if (Date.now() - payload.iat > FIVE_MINUTES) {
+    return false;
+  }
+
+  return true;
+}
 
 // const buildAuthResponse = (user, token) => ({
 //     token,
@@ -71,6 +215,9 @@ authRoute.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Incorrect password or email' })
         }
         const token = secretToken(user._id);
+        
+        console.log("token 1",token);
+        
         res.cookie("token", token, {
             httpOnly: true,
             sameSite: "lax",
@@ -103,17 +250,20 @@ authRoute.post('/', (req, res) => {
 }
 );
 
-// authRoute.get('/me', requireAuth, (req, res) => {
-//     res.status(200).json({
-//         success: true,
-//         user: {
-//             id: req.user._id,
-//             username: req.user.username,
-//             email: req.user.email,
-//             role: req.isAdmin ? "admin" : "user",
-//         },
-//     });
-// });
+authRoute.get('/me',authMiddleware, async (req, res) => {
+    const user = await User.findById(req.user.id)
+    .select("-password");
+    
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  res.json({
+    user,
+  });
+});
 
 authRoute.post('/logout', (req, res) => {
     res.clearCookie("token");
