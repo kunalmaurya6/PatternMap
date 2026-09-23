@@ -17,9 +17,6 @@ export const authMiddleware = (
 ) => {
   const token = req.cookies.token;
   
-  console.log("token",token);
-  
-
   if (!token) {
     return res.status(401).json({
       message: "Authentication required",
@@ -130,7 +127,7 @@ authRoute.get("/google/callback", async (req, res, next) => {
   }
 });
 
-function validateState(state) {
+function validateState(state:any) {
   const [encoded, sig] = state.split(".");
 
   const expectedSig = crypto
@@ -191,7 +188,7 @@ authRoute.post('/signup', async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: error.message ?? "Signup failed" });
+        res.status(500).json({ message:error instanceof Error ? error.message : "Signup failed" });
     }
 }
 );
@@ -228,7 +225,7 @@ authRoute.post('/login', async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: error.message ?? "Login failed" });
+        res.status(500).json({ message: error instanceof Error ? error.message : "Login failed" });
     }
 }
 );
@@ -238,7 +235,7 @@ authRoute.post('/', (req, res) => {
     if (!token) {
         return res.json({ status: false })
     }
-    jwt.verify(token, process.env.TOKEN_KEY!, async (err, data) => {
+    jwt.verify(token, process.env.TOKEN_KEY!, async (err:any, data:any) => {
         if (err) {
             return res.json({ status: false })
         } else {
