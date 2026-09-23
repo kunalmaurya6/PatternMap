@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Quote as QuoteIcon, RefreshCw } from 'lucide-react';
+import React from 'react';
+import { Quote as QuoteIcon } from 'lucide-react';
 import { mockQuotes } from '../data/mockDashboardData';
 
 export const GreetingSection: React.FC = () => {
