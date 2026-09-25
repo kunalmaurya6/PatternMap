@@ -9,6 +9,12 @@ import authentication from "./routes/authentication/index.js";
 
 const app = express();
 
+app.get("/api/health",(_,res)=>{
+    res.status(200).json({
+        health_status:"healthy"
+    });
+})
+
 app.use(express.json());
 
 app.use(cookieParser());
@@ -18,7 +24,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.use("/api", authentication, authMiddleware);
+app.use("/api", authentication);
 
 const PORT = Number(process.env.PORT) || 5000;
 
