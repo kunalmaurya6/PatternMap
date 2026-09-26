@@ -1,10 +1,8 @@
 import express from 'express';
-import routes from './routes/index.js';
 import mongoose from 'mongoose';
 import 'dotenv/config';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
-import { authMiddleware } from './routes/authentication/index.js';
 import authentication from "./routes/authentication/index.js";
 
 const app = express();
