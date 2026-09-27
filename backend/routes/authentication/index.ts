@@ -117,8 +117,9 @@ authRoute.get("/google/callback", async (req, res, next) => {
 
     const token = secretToken(user._id);
     res.cookie("token", token, {
-        httpOnly: true,
-        sameSite: "lax",
+        sameSite: "none",
+        secure: true,
+        httpOnly: true
     });
     
     return res.redirect("http://localhost:5173");
@@ -179,8 +180,9 @@ authRoute.post('/signup', async (req, res) => {
         const user = await User.create({ email, password: hashPassword, username });
         const token = secretToken(user._id);
         res.cookie("token", token, {
-            httpOnly: true,
-            sameSite: "lax",
+            sameSite: "none",
+            secure: true,
+            httpOnly: true
         });
         res
             .status(201)
@@ -216,8 +218,9 @@ authRoute.post('/login', async (req, res) => {
         console.log("token 1",token);
         
         res.cookie("token", token, {
-            httpOnly: true,
-            sameSite: "lax",
+            sameSite: "none",
+            secure: true,
+            httpOnly: true
         });
         res
             .status(200)
