@@ -30,7 +30,7 @@ export const ProtectedRoute = () => {
   }, [navigate]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Wait</div>;
   }
 
   return authenticated ? <Outlet /> : null;
