@@ -1,5 +1,6 @@
 import React from 'react';
-import { ExternalLink, CheckCircle, Tag, Layers } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ExternalLink, CheckCircle, Tag, Layers, Code2 } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { DifficultyBadge, TagBadge } from '@/components/common/Badge';
 import type { ProblemItem } from '../types';
@@ -77,16 +78,27 @@ export const ProblemModal: React.FC<ProblemModalProps> = ({
         )}
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between gap-3 pt-3 border-t border-[#1c2331]">
-          <a
-            href={`https://leetcode.com/problems/${problem.title.toLowerCase().replace(/\s+/g, '-')}/`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-[#1a2130] text-cyan-400 border border-cyan-500/20 hover:bg-[#202a3d] hover:border-cyan-500/40 transition-all"
-          >
-            <span>Open on LeetCode</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#1c2331]">
+          <div className="flex items-center gap-2">
+            <Link
+              to="/check-analytics"
+              onClick={onClose}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/25 transition-all"
+            >
+              <Code2 className="w-3.5 h-3.5" />
+              <span>Check Analytics</span>
+            </Link>
+
+            <a
+              href={`https://leetcode.com/problems/${problem.title.toLowerCase().replace(/\s+/g, '-')}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-[#1a2130] text-slate-300 border border-[#2b3548] hover:bg-[#202a3d] hover:text-white transition-all"
+            >
+              <span>LeetCode</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
 
           {onToggleSolved && (
             <button

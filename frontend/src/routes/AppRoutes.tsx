@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { ProblemsPage } from '@/features/problems/ProblemsPage';
+import { CheckAnalyticsPage } from '@/features/checkAnalytics';
 import { AnalyticsPage } from '@/features/analytics/AnalyticsPage';
 import { NotesPage } from '@/features/notes/NotesPage';
 import { BookmarksPage } from '@/features/bookmarks/BookmarksPage';
@@ -23,6 +24,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="/" element={<AppLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="problems" element={<ProblemsPage />} />
+          <Route path="check-analytics" element={<CheckAnalyticsPage />} />
+          <Route path="code-analysis" element={<CheckAnalyticsPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="notes" element={<NotesPage />} />
           <Route path="bookmarks" element={<BookmarksPage />} />

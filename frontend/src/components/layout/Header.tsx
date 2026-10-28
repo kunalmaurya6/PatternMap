@@ -73,8 +73,11 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle, onSearch }) => {
             onChange={handleSearchChange}
             onKeyDown={handleSearchKeyDown}
             placeholder="Search problems, patterns..."
-            className="w-full h-10 pl-10 pr-4 rounded-full bg-[#121620] border border-[#1e2533] text-sm text-slate-200 placeholder-slate-400 focus:outline-hidden focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all"
+            className="w-full h-10 pl-10 pr-16 rounded-xl bg-[#121620] border border-[#1e2533] text-sm text-slate-200 placeholder-slate-400 focus:outline-hidden focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all"
           />
+          <kbd className="hidden sm:inline-flex items-center absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-[#1a2130] border border-[#2b3547] rounded">
+            Ctrl+K
+          </kbd>
         </div>
 
         {/* Notifications Icon with Unread Indicator */}

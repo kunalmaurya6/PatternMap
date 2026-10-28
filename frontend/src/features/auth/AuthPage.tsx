@@ -78,7 +78,7 @@ export const AuthPage = () => {
 
     if (isResettingPassword) {
       setResetSent(true);
-      toastSuccess('If an account exists, a reset link has been sent.', 'Reset Link Sent');
+      toastSuccess('If an account exists, a otp has been sent.', 'otp Sent');
       return;
     }
 
@@ -198,7 +198,7 @@ export const AuthPage = () => {
 
               <p className="mt-2 text-sm text-[#959ca6]">
                 {isResettingPassword
-                  ? 'We will send a reset link to your email'
+                  ? 'We will send a otp to your email'
                   : isLogin
                     ? 'Continue your learning journey'
                     : 'Start your learning journey today'}
@@ -302,7 +302,7 @@ export const AuthPage = () => {
                 ) : (
                   <>
                     {isResettingPassword
-                      ? 'Send reset link'
+                      ? 'Send otp'
                       : isLogin
                         ? 'Login'
                         : 'Create account'}
@@ -314,7 +314,7 @@ export const AuthPage = () => {
 
               {resetSent && (
                 <p className="text-center text-sm text-[#8db2eb]">
-                  Reset link sent. Check your inbox.
+                  Otp sent. Check your inbox.
                 </p>
               )}
             </form>
